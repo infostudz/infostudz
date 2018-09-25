@@ -39,7 +39,7 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
+
 import org.json.JSONObject;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -75,12 +75,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(app.infostudz.it.activity.R.layout.activity_login);
         // Set up the login form.
-        mMatricolaView = (AutoCompleteTextView) findViewById(R.id.matricola);
+        mMatricolaView = (AutoCompleteTextView) findViewById(app.infostudz.it.activity.R.id.matricola);
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = (EditText) findViewById(app.infostudz.it.activity.R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -92,7 +92,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.login_button);
+        Button mEmailSignInButton = (Button) findViewById(app.infostudz.it.activity.R.id.login_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,8 +100,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        mLoginFormView = findViewById(app.infostudz.it.activity.R.id.login_form);
+        mProgressView = findViewById(app.infostudz.it.activity.R.id.login_progress);
     }
 
     private void populateAutoComplete() {
@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mMatricolaView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(mMatricolaView, app.infostudz.it.activity.R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
@@ -171,18 +171,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+            mPasswordView.setError(getString(app.infostudz.it.activity.R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
         }
 
         // Check for a valid matricola address.
         if (TextUtils.isEmpty(matricola)) {
-            mMatricolaView.setError(getString(R.string.error_field_required));
+            mMatricolaView.setError(getString(app.infostudz.it.activity.R.string.error_field_required));
             focusView = mMatricolaView;
             cancel = true;
         } else if (!isMatricolaValid(matricola)) {
-            mMatricolaView.setError(getString(R.string.error_invalid_email));
+            mMatricolaView.setError(getString(app.infostudz.it.activity.R.string.error_invalid_email));
             focusView = mMatricolaView;
             cancel = true;
         }
@@ -381,7 +381,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 //finish();
                 int a=1;
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError(getString(app.infostudz.it.activity.R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
         }
