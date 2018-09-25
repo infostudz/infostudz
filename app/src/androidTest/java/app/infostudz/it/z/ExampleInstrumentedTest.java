@@ -1,4 +1,4 @@
-package app.infostudz.it.infostudz;
+package app.infostudz.it.z;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

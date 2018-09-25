@@ -1,4 +1,4 @@
-package app.infostudz.it.infostudz;
+package app.infostudz.it.z;
 
 import org.junit.Test;
 

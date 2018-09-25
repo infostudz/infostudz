@@ -1,8 +1,9 @@
-package app.infostudz.it.infostudz;
+package app.infostudz.it.z;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -34,13 +35,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.infostudz.it.z.services.autenticazione;
+import app.infostudz.it.z.dto.Esito;
 
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-
-import org.json.JSONObject;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -75,12 +72,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(app.infostudz.it.activity.R.layout.activity_login);
+        setContentView(app.infostudz.it.z.R.layout.activity_login);
         // Set up the login form.
-        mMatricolaView = (AutoCompleteTextView) findViewById(app.infostudz.it.activity.R.id.matricola);
+        mMatricolaView = (AutoCompleteTextView) findViewById(app.infostudz.it.z.R.id.matricola);
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(app.infostudz.it.activity.R.id.password);
+        mPasswordView = (EditText) findViewById(app.infostudz.it.z.R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -92,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(app.infostudz.it.activity.R.id.login_button);
+        Button mEmailSignInButton = (Button) findViewById(app.infostudz.it.z.R.id.login_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,8 +97,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        mLoginFormView = findViewById(app.infostudz.it.activity.R.id.login_form);
-        mProgressView = findViewById(app.infostudz.it.activity.R.id.login_progress);
+        mLoginFormView = findViewById(app.infostudz.it.z.R.id.login_form);
+        mProgressView = findViewById(app.infostudz.it.z.R.id.login_progress);
     }
 
     private void populateAutoComplete() {
@@ -120,7 +117,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mMatricolaView, app.infostudz.it.activity.R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(mMatricolaView, app.infostudz.it.z.R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
@@ -171,18 +168,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(app.infostudz.it.activity.R.string.error_invalid_password));
+            mPasswordView.setError(getString(app.infostudz.it.z.R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
         }
 
         // Check for a valid matricola address.
         if (TextUtils.isEmpty(matricola)) {
-            mMatricolaView.setError(getString(app.infostudz.it.activity.R.string.error_field_required));
+            mMatricolaView.setError(getString(app.infostudz.it.z.R.string.error_field_required));
             focusView = mMatricolaView;
             cancel = true;
         } else if (!isMatricolaValid(matricola)) {
-            mMatricolaView.setError(getString(app.infostudz.it.activity.R.string.error_invalid_email));
+            mMatricolaView.setError(getString(app.infostudz.it.z.R.string.error_invalid_email));
             focusView = mMatricolaView;
             cancel = true;
         }
@@ -339,29 +336,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             boolean result = false;
 
             try {
-                 OkHttpClient client = new OkHttpClient();
                  String text = "matricola=" + mMatricola + "&stringaAutenticazione=" + mPassword + "&key=1nf0r1cc1";
-                 final  MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
-                 final RequestBody body = RequestBody.create(mediaType, text);
-                 Request request = new Request.Builder()
-                        .url("https://www.studenti.uniroma1.it/phoenixws/autenticazione")
-                        .post(body)
-                        .addHeader("Accept", "application/json")
-                        .addHeader("Cache-Control", "no-cache")
-                        .addHeader("Postman-Token", "dabfdbe0-57c7-46c1-8d6d-26dfe70bc70b")
-                        .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                        .build();
-
-               /*Response response = client.newCall(request).execute();
-
-                String responseText = response.body().toString();*/
-                String responseText = (client.newCall(request).execute()).body().string();
-                JSONObject Jobject = new JSONObject(responseText);
-                JSONObject esito = new JSONObject(Jobject.getString("esito"));
-                mMessage = esito.getString("nota");
-                result = esito.getString("flagEsito").equals("0");
-
-
+                 autenticazione aut = new autenticazione();
+                 Esito esito = aut.autenticazione(text);
+                 mMessage = esito.getNota();
+                 result = (esito.getFlagEsito() == 0 );
             } catch (Exception  ex)
             {
                 Log.d(this.TAG,ex.getMessage());
@@ -377,13 +356,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
             Toast.makeText(mLoginFormView.getContext() ,mMessage, Toast.LENGTH_LONG).show();
+            SharedPreferences.Editor editor = getSharedPreferences(getString(app.infostudz.it.z.R.string.Preferences), MODE_PRIVATE).edit();
             if (success) {
-                //finish();
-                int a=1;
+                editor.putString("matricola", mMatricola);
             } else {
-                mPasswordView.setError(getString(app.infostudz.it.activity.R.string.error_incorrect_password));
+                //mPasswordView.setError(getString(app.infostudz.it.z.R.string.error_incorrect_password));
+                mPasswordView.setError(mMessage);
                 mPasswordView.requestFocus();
+                editor.putString("matricola", null);
             }
+            editor.apply();
         }
 
         @Override
