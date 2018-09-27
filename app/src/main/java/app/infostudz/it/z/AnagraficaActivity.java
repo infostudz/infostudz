@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import app.infostudz.it.infostudz.R;
+import app.infostudz.it.z.R;
 
 public class AnagraficaActivity extends AppCompatActivity {
 

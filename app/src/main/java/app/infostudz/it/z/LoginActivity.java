@@ -3,6 +3,8 @@ package app.infostudz.it.z;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -193,8 +195,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // perform the user login attempt.
             showProgress(true);
 
-            mAuthTask = new UserLoginTask(matricola, password);
+            mAuthTask = new UserLoginTask(matricola, password,getBaseContext());
             mAuthTask.execute((Void) null);
+
         }
     }
 
@@ -308,11 +311,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private final String mPassword;
         private String mMessage;
         private static final String TAG = "MyActivity";
+        private Context context;
 
-        UserLoginTask(String matrciola, String password) {
+
+        UserLoginTask(String matrciola, String password,Context context) {
+            this.context = context;
             mMatricola = matrciola;
             mPassword = password;
             mMessage = "";
+            this.context = context.getApplicationContext();
         }
 
         @Override
@@ -359,6 +366,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             SharedPreferences.Editor editor = getSharedPreferences(getString(app.infostudz.it.z.R.string.Preferences), MODE_PRIVATE).edit();
             if (success) {
                 editor.putString("matricola", mMatricola);
+                Intent intent = new Intent(context, MainActivity.class);
+                startActivity(intent);
             } else {
                 //mPasswordView.setError(getString(app.infostudz.it.z.R.string.error_incorrect_password));
                 mPasswordView.setError(mMessage);
