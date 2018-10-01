@@ -7,17 +7,17 @@ public class Esito {
     private int flagEsito =0;
     private int id = 0;
     private String nota = null;
-    private String ritorno = null;
+    private Object ritorno = null;
     private String output = null;
 
-    public Esito(JSONObject rsespone) throws JSONException
+    public Esito(JSONObject response) throws JSONException
     {
-        JSONObject esito = new JSONObject(rsespone.getString("esito"));
+        JSONObject esito = new JSONObject(response.getString("esito"));
         this.flagEsito =  esito.getInt("flagEsito");
         this.id =  esito.getInt("id");
         this.nota =  esito.getString("nota");
         this.ritorno =  esito.getString("ritorno");
-        this.output =  rsespone.getString("output");
+        this.output =  null;
     }
 
     public int getFlagEsito() {
@@ -44,11 +44,11 @@ public class Esito {
         this.nota = nota;
     }
 
-    public String getRitorno() {
+    public Object getRitorno() {
         return ritorno;
     }
 
-    public void setRitorno(String ritorno) {
+    public void setRitorno(Object ritorno) {
         this.ritorno = ritorno;
     }
 

@@ -26,6 +26,24 @@ public class httpclient {
                     .post(body)
                     .addHeader("Accept", applicationJson)
                     .addHeader("Cache-Control", "no-cache")
+                    .addHeader("Content-Type", applicationJson)
+                    .build();
+            String responseText = (client.newCall(request).execute()).body().string();
+            result = new JSONObject(responseText);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return result;
+    }
+
+    public JSONObject get(String resource) {
+        JSONObject result = null;
+        try {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(BASE_URL + resource)
+                    .addHeader("Accept", applicationJson)
+                    .addHeader("Cache-Control", "no-cache")
                     .addHeader("Content-Type", applicationXwwwformurlencoded)
                     .build();
             String responseText = (client.newCall(request).execute()).body().string();

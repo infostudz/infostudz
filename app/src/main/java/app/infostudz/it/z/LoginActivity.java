@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -309,6 +310,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mMatricola;
         private final String mPassword;
+        private String mToken;
         private String mMessage;
         private static final String TAG = "MyActivity";
         private Context context;
@@ -318,6 +320,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             this.context = context;
             mMatricola = matrciola;
             mPassword = password;
+            mToken = null;
             mMessage = "";
             this.context = context.getApplicationContext();
         }
@@ -347,6 +350,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                  autenticazione aut = new autenticazione();
                  Esito esito = aut.autenticazione(text);
                  mMessage = esito.getNota();
+                 mToken = esito.getOutput();
                  result = (esito.getFlagEsito() == 0 );
             } catch (Exception  ex)
             {
@@ -366,7 +370,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             SharedPreferences.Editor editor = getSharedPreferences(getString(app.infostudz.it.z.R.string.Preferences), MODE_PRIVATE).edit();
             if (success) {
                 editor.putString("matricola", mMatricola);
-                Intent intent = new Intent(context, MainActivity.class);
+                editor.putString("token",mToken);
+                Intent intent = new Intent(context, HomeActivity.class);
                 startActivity(intent);
             } else {
                 //mPasswordView.setError(getString(app.infostudz.it.z.R.string.error_incorrect_password));

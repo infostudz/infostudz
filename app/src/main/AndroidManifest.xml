@@ -25,18 +25,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AnagraficaActivity"
-            android:label="@string/title_activity_anagrafica"
-            android:parentActivityName=".LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="app.infostudz.it.z.LoginActivity" />
-        </activity>
-        <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
