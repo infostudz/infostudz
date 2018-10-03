@@ -39,6 +39,7 @@ import java.util.List;
 
 import app.infostudz.it.z.services.autenticazione;
 import app.infostudz.it.z.dto.Esito;
+import app.infostudz.it.z.util.Preference;
 
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -327,22 +328,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mMatricola)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
             boolean result = false;
 
             try {
@@ -358,28 +344,33 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             }
 
-            // TODO: register the new account here.
             return result;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
+            Intent intent = null;
             showProgress(false);
             Toast.makeText(mLoginFormView.getContext() ,mMessage, Toast.LENGTH_LONG).show();
-            SharedPreferences.Editor editor = getSharedPreferences(getString(app.infostudz.it.z.R.string.Preferences), MODE_PRIVATE).edit();
+            Preference pref = new Preference(mLoginFormView.getContext());
+
             if (success) {
-                editor.putString("matricola", mMatricola);
-                editor.putString("token",mToken);
-                Intent intent = new Intent(context, HomeActivity.class);
-                startActivity(intent);
+                pref.setMatricola(mMatricola);
+                pref.setToken(mToken);
+                pref.close();
+                intent = new Intent(mLoginFormView.getContext(), HomeActivity.class);
+
             } else {
-                //mPasswordView.setError(getString(app.infostudz.it.z.R.string.error_incorrect_password));
                 mPasswordView.setError(mMessage);
                 mPasswordView.requestFocus();
-                editor.putString("matricola", null);
+                pref.setMatricola(null);
+                pref.close();
             }
-            editor.apply();
+
+            pref.close();
+            if (intent != null) startActivity(intent);
+
         }
 
         @Override

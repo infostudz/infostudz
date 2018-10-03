@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 public class Esito {
 
-    private int flagEsito =0;
+    private int flagEsito =-1;
     private int id = 0;
     private String nota = null;
     private Object ritorno = null;
@@ -12,12 +12,16 @@ public class Esito {
 
     public Esito(JSONObject response) throws JSONException
     {
-        JSONObject esito = new JSONObject(response.getString("esito"));
-        this.flagEsito =  esito.getInt("flagEsito");
-        this.id =  esito.getInt("id");
-        this.nota =  esito.getString("nota");
-        this.ritorno =  esito.getString("ritorno");
-        this.output =  null;
+
+        if (response != null)
+        {
+            JSONObject esito = new JSONObject(response.getString("esito"));
+            this.flagEsito = esito.getInt("flagEsito");
+            this.id = esito.getInt("id");
+            this.nota = esito.getString("nota");
+            this.ritorno = esito.getString("ritorno");
+            this.output = response.getString("output");
+        }
     }
 
     public int getFlagEsito() {
